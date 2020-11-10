@@ -641,7 +641,7 @@ namespace EVMC4U
         public void LoadVRM(string path)
         {
             DestroyModel();
-
+            Debug.Log(path);
             //バイナリの読み込み
             if (File.Exists(path))
             {
