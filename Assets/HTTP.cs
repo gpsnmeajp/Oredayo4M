@@ -107,6 +107,9 @@ class HTTP : IDisposable
                     case "/style.css":
                         res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "style.css"), new UTF8Encoding(false));
                         break;
+                    case "/mvp.css":
+                        res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "mvp.css"), new UTF8Encoding(false));
+                        break;
                     default:
                         res = "404 Not found";
                         response.StatusCode = 404;

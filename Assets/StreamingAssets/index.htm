@@ -3,19 +3,39 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="./mvp.css">
 		<title>Oredayo4M</title>
 	</head>
 	<body>
-		Oredayo4M<br>
-		<br>
+		<header>
+			<h2>Oredayo4M</h2>
+		</header>
+		<main>
 		<!--色設定-->
-		<input id="BG_Color_R"/><input id="BG_Color_G"/><input id="BG_Color_B"/><button onclick="SetBgColor();">Set Color</button><br>
+		<section>
+			<aside>
+					<h3>Color</h3>
+					<input id="BG_Color_R" value="0"/>
+					<input id="BG_Color_G" value="0"/>
+					<input id="BG_Color_B" value="0"/>
+					<button onclick="SetBgColor();">Set Color</button>
+			</aside>
+			<aside>
+				<article>Color</article>
+				<input id="BG_Color_R" value="0"/>
+				<input id="BG_Color_G" value="0"/>
+				<input id="BG_Color_B" value="0"/>
+				<button onclick="SetBgColor();">Set Color</button>
+			</aside>
+		</section>
+
 
 		<br>
 		<br>
 		<!--情報表示-->
 		--- Info ---<br>
-		<pre><div id="view"></div></pre>
+		<samp><div id="view"></div></samp>
 		<script src="script.js"></script>
+	</main>
 	</body>
 </html>
