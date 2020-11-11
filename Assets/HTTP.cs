@@ -35,6 +35,7 @@ class HTTP : IDisposable
 {
     HttpListener listener;
     Task thread = null;
+    public Func<string,string> processor;
     string adr = "";
     string responseBody = "{}";
     public void SetResponse(string res)
@@ -70,7 +71,7 @@ class HTTP : IDisposable
 
             try
             {
-                Debug.Log(request.Url.LocalPath);
+                //Debug.Log(request.Url.LocalPath);
                 switch (request.Url.LocalPath)
                 {
                     case "/":
@@ -81,9 +82,9 @@ class HTTP : IDisposable
                         break;
                     case "/command.dat":
                         res = "200 OK";
+                        string content = null;
                         if (request.HasEntityBody)
                         {
-                            string content = "";
                             using (var body = request.InputStream)
                             {
                                 var encoding = request.ContentEncoding;
@@ -95,6 +96,7 @@ class HTTP : IDisposable
                             }
                             Debug.Log(content);
                         }
+                        res = processor(content);
                         break;
                     case "/script.js":
                         res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "script.js"), new UTF8Encoding(false));

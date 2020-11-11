@@ -36,6 +36,16 @@ public class ManagerScript : MonoBehaviour
     {
         receiver.LoadVRM(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)+"/default.vrm");
         http = new HTTP("http://127.0.0.1:8000/");
+        http.processor = (s) =>
+        {
+            if (s == null) {
+                return "OK";
+            }
+            var c = JsonUtility.FromJson<Command>(s);
+            Debug.Log(c.command);
+
+            return c.command;
+        };
     }
 
     void Update()

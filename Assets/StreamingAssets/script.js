@@ -18,7 +18,7 @@ window.onload = ()=>{
 	};
 	
 	setInterval(function(){
-		worker.postMessage("");
+		worker.postMessage([true,null]);
 	}, 500);
 };
 
@@ -30,5 +30,5 @@ function SetBgColor()
 
 	let body = {command: "BG_Color", R: r*1.0, G: g*1.0, B:b*1.0}
 
-	worker.postMessage(JSON.stringify(body));
+	worker.postMessage([false,JSON.stringify(body)]);
 }

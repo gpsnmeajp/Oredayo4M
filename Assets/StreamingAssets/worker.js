@@ -5,7 +5,7 @@ onmessage = function(e) {
 	xhr.setRequestHeader("If-Modified-Since", "Thu, 01 Jan 1970 00:00:00 GMT");
 	xhr.timeout = 1000;
 	try {
-		xhr.send(e.data);
+		xhr.send(e.data[1]);
 	}catch (e) {
 		postMessage(e.message);
 	}
@@ -20,5 +20,8 @@ onmessage = function(e) {
 		postMessage("internal Error (EMPTY RESPONSE / CONNECTION REFUSED / etc...)");
 		return -1;
 	}
-	postMessage(xhr.responseText);
+	if(e.data[0])
+	{
+		postMessage(xhr.responseText);
+	}
 }	
