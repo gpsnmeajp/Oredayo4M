@@ -31,13 +31,20 @@ using EVMC4U;
 public class ManagerScript : MonoBehaviour
 {
     public ExternalReceiver receiver;
+    HTTP http;
     void Start()
     {
         receiver.LoadVRM(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)+"/default.vrm");
+        http = new HTTP("http://127.0.0.1:8000/");
     }
 
     void Update()
     {
         
+    }
+
+    private void OnApplicationQuit()
+    {
+        http.Dispose();
     }
 }
