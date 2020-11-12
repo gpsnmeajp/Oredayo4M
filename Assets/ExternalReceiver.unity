@@ -134,6 +134,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b1a1db52b2afb4e9cb87fac5cbf079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!23 &166999082 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6911890659307358123, guid: a15295da729586142b5d44bb4a14598d, type: 3}
+  m_PrefabInstance: {fileID: 478833078}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &478833078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -449,6 +454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   receiver: {fileID: 44123002}
+  BackgroundSphere: {fileID: 166999082}
 --- !u!4 &1238798826
 Transform:
   m_ObjectHideFlags: 0
