@@ -72,7 +72,9 @@ public class ManagerScript : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        http.Dispose();
+        if (http != null) {
+            http.Dispose();
+        }
     }
 
     //コマンド処理

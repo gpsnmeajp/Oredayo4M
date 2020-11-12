@@ -68,6 +68,8 @@ class HTTP : IDisposable
 
             HttpListenerResponse response = context.Response;
             string res = "";
+            response.StatusCode = 200;
+            response.ContentType = "text/html";
 
             try
             {
@@ -76,9 +78,11 @@ class HTTP : IDisposable
                 {
                     case "/":
                         res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "index.htm"), new UTF8Encoding(false));
+                        response.ContentType = "text/html";
                         break;
                     case "/info.dat":
                         res = responseBody;
+                        response.ContentType = "application/json";
                         break;
                     case "/command.dat":
                         res = "200 OK";
@@ -97,22 +101,28 @@ class HTTP : IDisposable
                             Debug.Log(content);
                         }
                         res = processor(content);
+                        response.ContentType = "application/json";
                         break;
                     case "/script.js":
                         res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "script.js"), new UTF8Encoding(false));
+                        response.ContentType = "text/javascript";
                         break;
                     case "/worker.js":
                         res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "worker.js"), new UTF8Encoding(false));
+                        response.ContentType = "text/javascript";
                         break;
                     case "/style.css":
                         res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "style.css"), new UTF8Encoding(false));
+                        response.ContentType = "text/css";
                         break;
                     case "/mvp.css":
                         res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "mvp.css"), new UTF8Encoding(false));
+                        response.ContentType = "text/css";
                         break;
                     default:
                         res = "404 Not found";
                         response.StatusCode = 404;
+                        response.ContentType = "text/html";
                         break;
                 }
             }
