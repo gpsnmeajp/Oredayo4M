@@ -129,7 +129,11 @@ class HTTP : IDisposable
             catch (Exception e)
             {
                 response.StatusCode = 500;
-                res = "Internal Server Error";
+                res = JsonUtility.ToJson(new CMD_Response
+                {
+                    success = false,
+                    message = "Internal Server Error",
+                });
                 Debug.Log(e);
             }
 

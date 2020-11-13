@@ -15,26 +15,45 @@
 		<section>
 			<aside>
 				<h3>Load VRM</h3>
-				Path<input id="LoadVRM_Path" value=""/>
-				<button onclick="LoadVRM();">Agree Licence & Load</button>
+				<label>Path: <input id="LoadVRM_Path" value="" style="display: inline; margin-bottom: 0;" /></label>
+				<button onclick="LoadVRMLicence();">Licence</button>
+				<button onclick="LoadVRM();">Agree</button>
 			</aside>
 
 			<aside>
 				<h3>Color(0.0～1.0)</h3>
-				R<input id="BG_Color_R" value="0"/>
-				G<input id="BG_Color_G" value="0"/>
-				B<input id="BG_Color_B" value="0"/>
-				<button onclick="SetBgColor();">Set Color</button>
+				<label>R: <input type="range" id="BG_Color_R" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;"  /></label>
+				<label>G: <input type="range" id="BG_Color_G" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
+				<label>B: <input type="range" id="BG_Color_B" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
+				
+				<button onclick="SetBgColor();">Set</button>
 			</aside>
-	</section>
 
+			<aside>
+				<h3>Camera</h3>
+				<label>Zoom: <input type="range" onchange="SetCamera();" id="Camera_Zoom" max=35.0 min=0.3 step=0.01 value=1.7  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;"  /></label>
+				<label>FOV: <input type="range" onchange="SetCamera();" id="Camera_FOV" max=90.0 min=1.0 step=0.01 value=20  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
+				<label>Angle: <input type="range" onchange="SetCamera();" id="Camera_Angle" max=180.0 min=-180.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
+				<label>Tilt: <input type="range" onchange="SetCamera();" id="Camera_Tilt" max=90.0 min=-90.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
+				<label>Height: <input type="range" onchange="SetCamera();" id="Camera_Height" max=3.0 min=-1.0 step=0.01 value=1.4  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
+				
+				<button onclick="SetCamera();">Set</button>
+			</aside>
 
-		<br>
-		<br>
-		<!--情報表示-->
-		--- Info ---<br>
-		<samp><div id="view"></div></samp>
-		<script src="script.js"></script>
+			<aside>
+			<!--情報表示-->
+				<h3>Information</h3>
+				<samp>
+					IP Address
+					<div id="view_ip"></div>
+				</samp>
+				<br>
+				<samp>
+					<div id="view_Internal"></div>
+				</samp>
+			</aside>
+		</section>
 	</main>
+	<script src="script.js"></script>
 	</body>
 </html>

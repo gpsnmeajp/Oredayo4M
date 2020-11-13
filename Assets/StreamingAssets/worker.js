@@ -5,23 +5,20 @@ onmessage = function(e) {
 	xhr.setRequestHeader("If-Modified-Since", "Thu, 01 Jan 1970 00:00:00 GMT");
 	xhr.timeout = 1000;
 	try {
-		xhr.send(e.data[1]);
+		xhr.send(e.data);
 	}catch (e) {
-		postMessage(e.message);
+		postMessage(JSON.stringify({"command":"Internal","message":e.message}));
 	}
 	
 	//---return stat---
 	if(xhr.readyState != 4)
 	{
-		postMessage("load failed.");
+		postMessage(JSON.stringify({"command":"Internal","message":"load failed."}));
 		return -1;
 	}
 	if(xhr.status == 0){
-		postMessage("internal Error (EMPTY RESPONSE / CONNECTION REFUSED / etc...)");
+		postMessage(JSON.stringify({"command":"Internal","message":"Communication Error"}));
 		return -1;
 	}
-	if(e.data[0])
-	{
-		postMessage(xhr.responseText);
-	}
+	postMessage(xhr.responseText);
 }	
