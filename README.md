@@ -13,6 +13,8 @@ Linux: Oredayo4M.x86_64を起動してください。ファイアーウォール
   
 特に指定がない場合、ユーザーフォルダ(ホームディレクトリ)直下に保存したdefault.vrmが読み込まれます。  
 
+# [ダウンロード](https://github.com/gpsnmeajp/Oredayo4M/releases)
+
 # スクリーンショット
 <img src="https://github.com/gpsnmeajp/Oredayo4M/blob/main/README-image/Mac.png?raw=true"></img>
 <img src="https://github.com/gpsnmeajp/Oredayo4M/blob/main/README-image/Win.png?raw=true"></img>
