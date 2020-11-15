@@ -63,16 +63,15 @@ public class ManagerScript : MonoBehaviour
 
     float lastPacketTime = 0.0f;
 
-    const string url = "http://127.0.0.1:8000/";
     void Start()
     {
         synchronizationContext = SynchronizationContext.Current; //メインスレッドのコンテキストを保存
 
         receiver.LoadVRM(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)+"/default.vrm");
-        http = new HTTP(url);
+        http = new HTTP("http://127.0.0.1:39451/");
         http.processor = CommandProcessor;
 
-        System.Diagnostics.Process.Start(url);
+        System.Diagnostics.Process.Start("http://127.0.0.1:39451/");
 
         //IPアドレスリスト
         IPAddress[] ips = Dns.GetHostAddresses(Dns.GetHostName());

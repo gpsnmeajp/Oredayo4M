@@ -35,7 +35,8 @@ class HTTP : IDisposable
 {
     HttpListener listener;
     Task thread = null;
-    public Func<string,string> processor;
+    public Func<string, string> processor;
+
     string adr = "";
     string responseBody = "{}";
     public void SetResponse(string res)
@@ -48,6 +49,8 @@ class HTTP : IDisposable
         this.adr = adr;
         listener = new HttpListener();
         listener.Prefixes.Add(adr);
+        listener.IgnoreWriteExceptions = true;
+        listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
 
         Console.WriteLine("### View server started on " + adr);
         listener.Start();
@@ -55,100 +58,111 @@ class HTTP : IDisposable
         //受信処理スレッド
         thread = new Task(() => { ReceiveThread(); });
         thread.Start();
-
     }
     private async void ReceiveThread()
     {
-        while (listener.IsListening)
+        try
         {
-            HttpListenerContext context = listener.GetContext();
-            HttpListenerRequest request = context.Request;
-            
-            //Debug.Log(request.Url.LocalPath);
-
-            HttpListenerResponse response = context.Response;
-            string res = "";
-            response.StatusCode = 200;
-            response.ContentType = "text/html";
-
-            try
+            while (listener.IsListening)
             {
-                //Debug.Log(request.Url.LocalPath);
-                switch (request.Url.LocalPath)
+                HttpListenerContext context = listener.GetContext();
+                HttpListenerRequest request = context.Request;
+
+                HttpListenerResponse response = context.Response;
+                string res = "";
+
+                response.StatusCode = 200;
+                response.ContentType = "text/html";
+
+                try
                 {
-                    case "/":
-                        res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "index.htm"), new UTF8Encoding(false));
-                        response.ContentType = "text/html";
-                        break;
-                    case "/info.dat":
-                        res = responseBody;
-                        response.ContentType = "application/json";
-                        break;
-                    case "/command.dat":
-                        res = "200 OK";
-                        string content = null;
-                        if (request.HasEntityBody)
-                        {
-                            using (var body = request.InputStream)
+                    //Debug.Log(request.Url.LocalPath);
+                    switch (request.Url.LocalPath)
+                    {
+                        case "/":
+                            res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "index.htm"), new UTF8Encoding(false));
+                            response.ContentType = "text/html";
+                            break;
+                        case "/info.dat":
+                            res = responseBody;
+                            response.ContentType = "application/json";
+                            break;
+                        case "/command.dat":
+                            res = "200 OK";
+                            string content = null;
+                            if (request.HasEntityBody)
                             {
-                                var encoding = request.ContentEncoding;
-                                using (var reader = new StreamReader(body, encoding))
+                                using (var body = request.InputStream)
                                 {
-                                    content = reader.ReadToEnd();
-                                    body.Close();
+                                    var encoding = request.ContentEncoding;
+                                    using (var reader = new StreamReader(body, encoding))
+                                    {
+                                        content = reader.ReadToEnd();
+                                        body.Close();
+                                    }
                                 }
                             }
-                        }
-                        if(content != null) //定期通信を除外
-                        {
-                            Debug.Log("> " + content);
-                        }
-                        res = processor(content);
-                        if (content != null)
-                        {
-                            Debug.Log("< " + res);
-                        }
-                        response.ContentType = "application/json";
-                        break;
-                    case "/script.js":
-                        res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "script.js"), new UTF8Encoding(false));
-                        response.ContentType = "text/javascript";
-                        break;
-                    case "/worker.js":
-                        res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "worker.js"), new UTF8Encoding(false));
-                        response.ContentType = "text/javascript";
-                        break;
-                    case "/style.css":
-                        res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "style.css"), new UTF8Encoding(false));
-                        response.ContentType = "text/css";
-                        break;
-                    case "/mvp.css":
-                        res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "mvp.css"), new UTF8Encoding(false));
-                        response.ContentType = "text/css";
-                        break;
-                    default:
-                        res = "404 Not found";
-                        response.StatusCode = 404;
-                        response.ContentType = "text/html";
-                        break;
+                            if (content != null) //定期通信を除外
+                            {
+                                Debug.Log("> " + content);
+                            }
+                            res = processor(content);
+                            if (content != null)
+                            {
+                                Debug.Log("< " + res);
+                            }
+                            response.ContentType = "application/json";
+                            break;
+                        case "/script.js":
+                            res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "script.js"), new UTF8Encoding(false));
+                            response.ContentType = "text/javascript";
+                            break;
+                        case "/worker.js":
+                            res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "worker.js"), new UTF8Encoding(false));
+                            response.ContentType = "text/javascript";
+                            break;
+                        case "/style.css":
+                            res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "style.css"), new UTF8Encoding(false));
+                            response.ContentType = "text/css";
+                            break;
+                        case "/mvp.css":
+                            res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "mvp.css"), new UTF8Encoding(false));
+                            response.ContentType = "text/css";
+                            break;
+                        default:
+                            res = "404 Not found";
+                            response.StatusCode = 404;
+                            response.ContentType = "text/html";
+                            break;
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                response.StatusCode = 500;
-                res = JsonUtility.ToJson(new CMD_Response
+                catch (Exception e)
                 {
-                    success = false,
-                    message = "Internal Server Error\n"+e.Message+"\n"+e.StackTrace,
-                });
-                Debug.Log(e);
+                    response.StatusCode = 500;
+                    res = JsonUtility.ToJson(new CMD_Response
+                    {
+                        success = false,
+                        message = "Internal Server Error\n" + e.Message + "\n" + e.StackTrace,
+                    });
+                    Debug.LogException(e);
+                }
+
+                byte[] buf = new UTF8Encoding(false).GetBytes(res);
+                response.OutputStream.Write(buf, 0, buf.Length);
+                response.OutputStream.Close();
+
+                await Task.Delay(30);
             }
-
-            byte[] buf = new UTF8Encoding(false).GetBytes(res);
-            response.OutputStream.Write(buf, 0, buf.Length);
-            response.OutputStream.Close();
-
-            await Task.Delay(30);
+        }
+        catch (Exception e)
+        {
+            if (e is HttpListenerException && e.Message == "Listener closed")
+            {
+                //Do noting
+            }
+            else {
+                Debug.LogException(e);
+            }
         }
     }
 
