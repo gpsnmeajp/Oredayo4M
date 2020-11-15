@@ -50,7 +50,6 @@ class HTTP : IDisposable
         listener = new HttpListener();
         listener.Prefixes.Add(adr);
         listener.IgnoreWriteExceptions = true;
-        listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
 
         Console.WriteLine("### View server started on " + adr);
         listener.Start();
