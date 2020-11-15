@@ -67,7 +67,7 @@ public class ManagerScript : MonoBehaviour
     {
         synchronizationContext = SynchronizationContext.Current; //メインスレッドのコンテキストを保存
 
-        receiver.LoadVRM(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)+"/default.vrm");
+        receiver.LoadVRM(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"default.vrm"));
         http = new HTTP("http://127.0.0.1:39451/");
         http.processor = CommandProcessor;
 
@@ -139,6 +139,7 @@ public class ManagerScript : MonoBehaviour
             if (File.Exists(d.path))
             {
                 string data = File.ReadAllText(d.path);
+                Debug.Log("Load: " + d.path);
                 saveData = JsonUtility.FromJson<CMD_SaveData>(data);
                 return JsonUtility.ToJson(saveData);
             }
@@ -156,10 +157,19 @@ public class ManagerScript : MonoBehaviour
             var d = JsonUtility.FromJson<CMD_Save>(commandJson);
 
             File.WriteAllText(d.path, JsonUtility.ToJson(saveData), new UTF8Encoding(false));
+            Debug.Log("Save: " + d.path);
             return JsonUtility.ToJson(new CMD_Response
             {
                 success = true,
                 message = "OK",
+            });
+        }
+        else if (c.command == "Init")
+        {
+            return JsonUtility.ToJson(new CMD_InitParam
+            {
+                loadvrmPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "default.vrm"),
+                settingPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "Oredayo4V_Setting.json"),
             });
         }
         else if (c.command == "AutoConnect")

@@ -21,6 +21,15 @@ public class CMD_Response
     public string message;
 }
 
+//初期値応答
+[Serializable]
+public class CMD_InitParam
+{
+    public string command = "InitParam";
+    public string loadvrmPath;
+    public string settingPath;
+}
+
 
 //共通: コマンド部分だけ取り出す
 [Serializable]

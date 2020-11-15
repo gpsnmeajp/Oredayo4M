@@ -20,8 +20,6 @@ window.onload = ()=>{
 			document.getElementById ("view_ip").innerHTML = response.ip;
 			document.getElementById ("view_AutoConnect").style.display = response.deviceFound ? "block":"none";
 			document.getElementById ("view_Connection").style.display = response.connected ? "block":"none";
-
-
 		}
 		if(response.command == "Internal"){
 			document.getElementById ("view_Internal").innerHTML = response.message;
@@ -30,6 +28,10 @@ window.onload = ()=>{
 			if(response.success == false){
 				document.getElementById ("view_Message").innerHTML = response.message;
 			}
+		}
+		if(response.command == "InitParam"){
+			document.getElementById ("LoadVRM_Path").value = response.loadvrmPath;
+			document.getElementById ("Settings_Path").value = response.settingPath;
 		}
 		if(response.command == "SaveData"){
 			document.getElementById ("BG_Color_R").value = response.bgcolor.r;
@@ -76,6 +78,7 @@ window.onload = ()=>{
 
 	//初回データ送信
 	SendAll();
+	Init();
 };
 
 function SetBgColor()
@@ -84,7 +87,7 @@ function SetBgColor()
 	let g = document.getElementById ("BG_Color_G").value;
 	let b = document.getElementById ("BG_Color_B").value;
 
-	let body = {"command": "BG_Color", "r": r*1.0, "g": g*1.0, "b":b*1.0}
+	let body = {"command": "BG_Color", "r": r*1.0, "g": g*1.0, "b":b*1.0};
 
 	worker.postMessage(JSON.stringify(body));
 }
@@ -111,7 +114,7 @@ function SetCamera()
 	let tilt = document.getElementById ("Camera_Tilt").value;
 	let height = document.getElementById ("Camera_Height").value;
 
-	let body = {"command": "Camera","zoom":zoom,"fov":fov,"angle":angle,"tilt":tilt,"height":height}
+	let body = {"command": "Camera","zoom":zoom,"fov":fov,"angle":angle,"tilt":tilt,"height":height};
 
 	worker.postMessage(JSON.stringify(body));
 }
@@ -122,13 +125,14 @@ function Save()
 	SendAll();
 
 	let path = document.getElementById ("Settings_Path").value;
-	let body = {"command": "Save","path": path}
+	let body = {"command": "Save","path": path};
 	worker.postMessage(JSON.stringify(body));
 }
 
 function Load()
 {
-	let body = {"command": "Load","path": "setting.json"}
+	let path = document.getElementById ("Settings_Path").value;
+	let body = {"command": "Load","path": path};
 	worker.postMessage(JSON.stringify(body));
 }
 
@@ -169,6 +173,12 @@ function ResetPPS()
 	document.getElementById ("PPS_ColorGrading_Saturation").value = 0.0;
 	document.getElementById ("PPS_ColorGrading_Contrast").value = 0.0;
 	SetPPS();
+}
+
+function Init()
+{
+	let body = {"command": "Init"};
+	worker.postMessage(JSON.stringify(body));
 }
 
 function SendAll()
