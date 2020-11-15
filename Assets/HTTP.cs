@@ -98,9 +98,16 @@ class HTTP : IDisposable
                                     body.Close();
                                 }
                             }
-                            Debug.Log(content);
+                        }
+                        if(content != null) //定期通信を除外
+                        {
+                            Debug.Log("> " + content);
                         }
                         res = processor(content);
+                        if (content != null)
+                        {
+                            Debug.Log("< " + res);
+                        }
                         response.ContentType = "application/json";
                         break;
                     case "/script.js":
@@ -132,7 +139,7 @@ class HTTP : IDisposable
                 res = JsonUtility.ToJson(new CMD_Response
                 {
                     success = false,
-                    message = "Internal Server Error",
+                    message = "Internal Server Error\n"+e.Message+"\n"+e.StackTrace,
                 });
                 Debug.Log(e);
             }

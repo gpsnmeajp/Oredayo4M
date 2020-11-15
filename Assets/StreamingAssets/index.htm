@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="./mvp.css">
+		<link rel="stylesheet" href="./style.css">
 		<title>Oredayo4M</title>
 	</head>
 	<body>
@@ -14,6 +15,21 @@
 		<!--色設定-->
 		<section>
 			<aside>
+				<h3>Settings</h3>
+				<label>Path: <input id="Settings_Path" value="setting.json" style="display: inline; margin-bottom: 0;" /></label>
+				<button onclick="Save();">Save</button>
+				<button onclick="Load();">Load</button>
+			</aside>
+			<aside>
+				<h3>Connection</h3>
+				<samp>
+					<div id="view_AutoConnect">Device Found!</div>
+					<div id="view_Connection">Connected!</div>
+				</samp>
+				<br>
+				<button onclick="AutoConnect();">AutoConnect</button>
+			</aside>
+			<aside>
 				<h3>Load VRM</h3>
 				<label>Path: <input id="LoadVRM_Path" value="" style="display: inline; margin-bottom: 0;" /></label>
 				<button onclick="LoadVRMLicence();">Licence</button>
@@ -22,22 +38,74 @@
 
 			<aside>
 				<h3>Color(0.0～1.0)</h3>
-				<label>R: <input type="range" id="BG_Color_R" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;"  /></label>
-				<label>G: <input type="range" id="BG_Color_G" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
-				<label>B: <input type="range" id="BG_Color_B" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
+				<label>R: <input type="range" id="BG_Color_R" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  class="slider"  /></label>
+				<label>G: <input type="range" id="BG_Color_G" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=1   class="slider" /></label>
+				<label>B: <input type="range" id="BG_Color_B" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  class="slider"  /></label>
 				
 				<button onclick="SetBgColor();">Set</button>
 			</aside>
 
 			<aside>
 				<h3>Camera</h3>
-				<label>Zoom: <input type="range" onchange="SetCamera();" id="Camera_Zoom" max=35.0 min=0.3 step=0.01 value=1.7  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;"  /></label>
-				<label>FOV: <input type="range" onchange="SetCamera();" id="Camera_FOV" max=90.0 min=1.0 step=0.01 value=20  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
-				<label>Angle: <input type="range" onchange="SetCamera();" id="Camera_Angle" max=180.0 min=-180.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
-				<label>Tilt: <input type="range" onchange="SetCamera();" id="Camera_Tilt" max=90.0 min=-90.0 step=0.01 value=0  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
-				<label>Height: <input type="range" onchange="SetCamera();" id="Camera_Height" max=3.0 min=-1.0 step=0.01 value=1.4  style="display: inline; vertical-align: middle; margin-bottom: 0.5em; margin-top: 0.5em; padding: 0;" /></label>
+				<label>Zoom: <input type="range" onchange="SetCamera();" id="Camera_Zoom" max=35.0 min=0.3 step=0.01 value=1.7   class="slider"  /></label>
+				<label>FOV: <input type="range" onchange="SetCamera();" id="Camera_FOV" max=90.0 min=1.0 step=0.01 value=20  class="slider"  /></label>
+				<label>Angle: <input type="range" onchange="SetCamera();" id="Camera_Angle" max=180.0 min=-180.0 step=0.01 value=0   class="slider" /></label>
+				<label>Tilt: <input type="range" onchange="SetCamera();" id="Camera_Tilt" max=90.0 min=-90.0 step=0.01 value=0  class="slider"  /></label>
+				<label>Height: <input type="range" onchange="SetCamera();" id="Camera_Height" max=3.0 min=-1.0 step=0.01 value=1.4   class="slider" /></label>
 				
 				<button onclick="SetCamera();">Set</button>
+			</aside>
+			<aside>
+				<h3>Anti Aliasing</h3>
+				<label>Enable: <input type="checkbox" onchange="SetPPS();" id="PPS_AntiAliasing_Enable"  class="slider" /></label>
+				<br>
+				<button onclick="SetPPS();">Set</button>
+			</aside>
+			<aside>
+				<h3>Bloom</h3>
+				<label>Enable: <input type="checkbox" onchange="SetPPS();" id="PPS_Bloom_Enable"  class="slider" /></label>
+				<label>Intensity: <input type="range" onchange="SetPPS();" id="PPS_Bloom_Intensity" max=50.0 min=0.0 step=0.01 value=1.0  class="slider"   /></label>
+				<label>Threshold: <input type="range" onchange="SetPPS();" id="PPS_Bloom_Threshold" max=2.0 min=0.0 step=0.01 value=1.0  class="slider"   /></label>
+				<br>
+				<button onclick="SetPPS();">Set</button>
+			</aside>
+			<aside>
+				<h3>Depth of Field</h3>
+				<label>Enable: <input type="checkbox" onchange="SetPPS();" id="PPS_DepthOfField_Enable"  class="slider" /></label>
+				<label>Focus Distance: <input type="range" onchange="SetPPS();" id="PPS_DepthOfField_FocusDistance" max=100.0 min=0.0 step=0.01 value=10.0  class="slider"   /></label>
+				<label>Aperture: <input type="range" onchange="SetPPS();" id="PPS_DepthOfField_Aperture" max=32.0 min=0.1 step=0.01 value=1.0  class="slider"   /></label>
+				<label>Focus Length: <input type="range" onchange="SetPPS();" id="PPS_DepthOfField_FocusLength" max=300.0 min=1.0 step=0.01 value=1.0  class="slider"   /></label>
+				<label>Max Blur Size: <input type="range" onchange="SetPPS();" id="PPS_DepthOfField_MaxBlurSize" max=4 min=1 step=1 value=2  class="slider"   /></label>
+				<br>
+				<button onclick="SetPPS();">Set</button>
+			</aside>
+			<aside>
+				<h3>Color Grading</h3>
+				<label>Enable: <input type="checkbox" onchange="SetPPS();" id="PPS_ColorGrading_Enable"  class="slider" /></label>
+				<label>Temperature: <input type="range" onchange="SetPPS();" id="PPS_ColorGrading_Temperature" max=100.0 min=-100.0 step=0.01 value=0  class="slider"   /></label>
+				<label>Saturation: <input type="range" onchange="SetPPS();" id="PPS_ColorGrading_Saturation" max=100.0 min=-100.0 step=0.01 value=0  class="slider"   /></label>
+				<label>Contrast: <input type="range" onchange="SetPPS();" id="PPS_ColorGrading_Contrast" max=100.0 min=-100.0 step=0.01 value=0  class="slider"   /></label>
+				<br>
+				<button onclick="ResetPPS();">Reset</button>
+				<button onclick="SetPPS();">Set</button>
+			</aside>
+
+			<aside>
+				<h3>Vignette</h3>
+				<label>Enable: <input type="checkbox" onchange="SetPPS();" id="PPS_Vignette_Enable"  class="slider" /></label>
+				<label>Intensity: <input type="range" onchange="SetPPS();" id="PPS_Vignette_Intensity" max=1.0 min=0.0 step=0.01 value=0.0  class="slider"   /></label>
+				<label>Smoothness: <input type="range" onchange="SetPPS();" id="PPS_Vignette_Smoothness" max=1.0 min=0.0 step=0.01 value=0.0  class="slider"   /></label>
+				<label>Rounded: <input type="range" onchange="SetPPS();" id="PPS_Vignette_Rounded" max=1.0 min=0.0 step=0.01 value=0.0  class="slider"   /></label>
+				<br>
+				<button onclick="SetPPS();">Set</button>
+			</aside>
+
+			<aside>
+				<h3>Chromatic Aberration</h3>
+				<label>Enable: <input type="checkbox" onchange="SetPPS();" id="PPS_ChromaticAberration_Enable"  class="slider" /></label>
+				<label>Intensity: <input type="range" onchange="SetPPS();" id="PPS_ChromaticAberration_Intensity" max=1.0 min=0.0 step=0.01 value=0.0  class="slider"   /></label>
+				<br>
+				<button onclick="SetPPS();">Set</button>
 			</aside>
 
 			<aside>
@@ -50,6 +118,9 @@
 				<br>
 				<samp>
 					<div id="view_Internal"></div>
+				</samp>
+				<samp>
+					<d style="color: red;" id="view_Message"></div>
 				</samp>
 			</aside>
 		</section>
