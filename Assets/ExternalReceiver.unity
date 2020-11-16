@@ -769,6 +769,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4740143680597435056, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
+      propertyPath: BoneRotationFilterEnable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4740143680597435056, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
+      propertyPath: BonePositionFilterEnable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4740143680597435056, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
+      propertyPath: BlendShapeFilterEnable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4740143680597435056, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
+      propertyPath: BoneFilter
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4740143680597435056, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
+      propertyPath: BlendShapeFilter
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4740143680597435057, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
       propertyPath: m_Name
       value: ExternalReceiver
@@ -821,5 +841,9 @@ PrefabInstance:
       propertyPath: port
       value: 39540
       objectReference: {fileID: 0}
+    - target: {fileID: 4740143681450883638, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
+      propertyPath: VMCControlledLight
+      value: 
+      objectReference: {fileID: 515840948}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86b1e8192cb57cd47890882526664df1, type: 3}

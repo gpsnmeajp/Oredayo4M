@@ -113,6 +113,13 @@ public class CMD_PPS
     public float ChromaticAberration_Intensity;
 }
 
+[Serializable]
+public class CMD_Filter
+{
+    public string command;
+    public float bone;
+    public float blendShape;
+}
 
 [Serializable]
 public class CMD_SaveData
@@ -122,4 +129,5 @@ public class CMD_SaveData
     public CMD_Camera camera;
     public CMD_BG_Color bgcolor;
     public CMD_PPS pps;
+    public CMD_Filter filter;
 }

@@ -38,7 +38,7 @@
 			</aside>
 
 			<aside>
-				<h3>Color(0.0～1.0)</h3>
+				<h3>Color</h3>
 				<label>R: <input type="range" id="BG_Color_R" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  class="slider"  /></label>
 				<label>G: <input type="range" id="BG_Color_G" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=1   class="slider" /></label>
 				<label>B: <input type="range" id="BG_Color_B" onchange="SetBgColor();" max=1.0 min=0.0 step=0.01 value=0  class="slider"  /></label>
@@ -107,6 +107,13 @@
 				<label>Intensity: <input type="range" onchange="SetPPS();" id="PPS_ChromaticAberration_Intensity" max=1.0 min=0.0 step=0.01 value=0.0  class="slider"   /></label>
 				<br>
 				<button onclick="SetPPS();">Set</button>
+			</aside>
+			<aside>
+				<h3>Filter (0.0～1.0)</h3>
+				<label>Bone (Recommend: 0.99) <input type="text" onInput="SetFilter();" id="Filter_Bone" value=0.0 /></label>
+				<label>Blend Shape (Recommend: 0.4) <input type="text" onInput="SetFilter();" id="Filter_BlendShape" value=0.0 /></label>
+				<br>
+				<button onclick="SetFilter();">Set</button>
 			</aside>
 
 			<aside>

@@ -437,6 +437,25 @@ public class ManagerScript : MonoBehaviour
                 message = "OK",
             });
         }
+        else if (c.command == "Filter")
+        {
+            //Jsonを詳細解析
+            var d = JsonUtility.FromJson<CMD_Filter>(commandJson);
+            //記録する
+            saveData.filter = d;
+
+            //メインスレッドに渡す
+            synchronizationContext.Post(_ => {
+                receiver.BoneFilter = d.bone;
+                receiver.BlendShapeFilter = d.blendShape;
+            }, null);
+
+            return JsonUtility.ToJson(new CMD_Response
+            {
+                success = true,
+                message = "OK",
+            });
+        }
 
         return JsonUtility.ToJson(new CMD_Response
         {

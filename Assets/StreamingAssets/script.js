@@ -77,7 +77,8 @@ window.onload = ()=>{
 			document.getElementById ("PPS_Vignette_Rounded").value = response.pps.Vignette_Rounded;
 			document.getElementById ("PPS_ChromaticAberration_Enable").checked = response.pps.ChromaticAberration_Enable;
 			document.getElementById ("PPS_ChromaticAberration_Intensity").value = response.pps.ChromaticAberration_Intensity;
-
+			document.getElementById ("Filter_Bone").value = Math.round(response.filter.bone*100000.0)/100000.0;
+			document.getElementById ("Filter_BlendShape").value = Math.round(response.filter.blendShape*100000.0)/100000.0;
 			SendAll();
 			LoadVRM();
 		}
@@ -199,6 +200,29 @@ function BrowseVRM()
 	worker.postMessage(JSON.stringify(body));
 }
 
+function SetFilter()
+{
+	let bone = document.getElementById ("Filter_Bone").value;
+	let blendShape = document.getElementById ("Filter_BlendShape").value;
+
+	if(bone == null){bone=0;}
+	bone *= 1.0;
+	if(isNaN(bone)){bone=0;}
+	if(bone < 0){bone=0;}
+	if(bone > 1){bone=1;}
+
+	if(blendShape == null){blendShape=0;}
+	blendShape *= 1.0;
+	if(isNaN(blendShape)){blendShape=0;}
+	if(blendShape < 0){blendShape=0;}
+	if(blendShape > 1){blendShape=1;}
+
+	let body = {"command": "Filter", "bone": bone, "blendShape": blendShape};
+
+	worker.postMessage(JSON.stringify(body));
+}
+
+
 function Init()
 {
 	let body = {"command": "Init"};
@@ -210,5 +234,6 @@ function SendAll()
 	SetBgColor();
 	SetCamera();
 	SetPPS();
+	SetFilter();
 	//VRMは送ると再ロードが走るためナシ
 }
