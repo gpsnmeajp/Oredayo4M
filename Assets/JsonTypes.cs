@@ -11,6 +11,8 @@ public class CMD_Status
     public string ip;
     public bool deviceFound;
     public bool connected;
+    public string lastBrowse = "";
+    public string lastBrowseVRM = "";
 }
 //レスポンス
 [Serializable]

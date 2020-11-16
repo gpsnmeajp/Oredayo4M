@@ -2,6 +2,9 @@
 let view = document.getElementById ("view");
 let worker;
 
+let lastBrowse = "";
+let lastBrowseVRM = "";
+
 window.onload = ()=>{
 	if (!window.Worker) {
 		alert("Web Worker disabled! Editor won't work!")
@@ -20,6 +23,15 @@ window.onload = ()=>{
 			document.getElementById ("view_ip").innerHTML = response.ip;
 			document.getElementById ("view_AutoConnect").style.display = response.deviceFound ? "block":"none";
 			document.getElementById ("view_Connection").style.display = response.connected ? "block":"none";
+
+			if(lastBrowseVRM != response.lastBrowseVRM){
+				lastBrowseVRM = response.lastBrowseVRM;
+				document.getElementById ("LoadVRM_Path").value = response.lastBrowseVRM;
+			}
+			if(lastBrowse != response.lastBrowse){
+				lastBrowse = response.lastBrowse;
+				document.getElementById ("Settings_Path").value = response.lastBrowse;
+			}
 		}
 		if(response.command == "Internal"){
 			document.getElementById ("view_Internal").innerHTML = response.message;
@@ -173,6 +185,18 @@ function ResetPPS()
 	document.getElementById ("PPS_ColorGrading_Saturation").value = 0.0;
 	document.getElementById ("PPS_ColorGrading_Contrast").value = 0.0;
 	SetPPS();
+}
+
+function Browse()
+{
+	let body = {"command": "Browse"}
+	worker.postMessage(JSON.stringify(body));
+}
+
+function BrowseVRM()
+{
+	let body = {"command": "BrowseVRM"}
+	worker.postMessage(JSON.stringify(body));
 }
 
 function Init()

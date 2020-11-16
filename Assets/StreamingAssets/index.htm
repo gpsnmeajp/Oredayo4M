@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="./mvp.css">
 		<link rel="stylesheet" href="./style.css">
+		<link rel="stylesheet" href="./mvp.css">
 		<title>Oredayo4M</title>
 	</head>
 	<body>
@@ -17,7 +17,7 @@
 		<section>
 			<aside>
 				<h3>Settings</h3>
-				<label>Path: <input id="Settings_Path" value="" style="display: inline; margin-bottom: 0;" /></label>
+				<label>Path: <input id="Settings_Path" value="" style="display: inline; margin-bottom: 0;" /><button onclick="Browse();" style="display: inline; margin-bottom: 0; margin-left: 0.1em; padding: 0;">...</button></label>
 				<button onclick="Save();">Save</button>
 				<button onclick="Load();">Load</button>
 			</aside>
@@ -32,7 +32,7 @@
 			</aside>
 			<aside>
 				<h3>Load VRM</h3>
-				<label>Path: <input id="LoadVRM_Path" value="" style="display: inline; margin-bottom: 0;" /></label>
+				<label>Path: <input id="LoadVRM_Path" value="" style="display: inline; margin-bottom: 0;" /><button onclick="BrowseVRM();" style="display: inline; margin-bottom: 0; margin-left: 0.1em; padding: 0;">...</button></label>
 				<button onclick="LoadVRMLicence();">Licence</button>
 				<button onclick="LoadVRM();">Agree</button>
 			</aside>

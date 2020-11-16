@@ -35,6 +35,7 @@ using UnityEngine.Rendering.PostProcessing;
 using EVMC4U;
 using VRM;
 using VRMLoader;
+using SimpleFileBrowser;
 
 public class ManagerScript : MonoBehaviour
 {
@@ -58,10 +59,10 @@ public class ManagerScript : MonoBehaviour
 
     SynchronizationContext synchronizationContext;
     HTTP http;
-    string ipList = "";
-    bool deviceFound = false;
 
     float lastPacketTime = 0.0f;
+
+    CMD_Status status = new CMD_Status();
 
     void Start()
     {
@@ -75,16 +76,16 @@ public class ManagerScript : MonoBehaviour
 
         //IPアドレスリスト
         IPAddress[] ips = Dns.GetHostAddresses(Dns.GetHostName());
-        ipList = "";
+        status.ip = "";
         foreach (var ip in ips)
         {
             //IPv4のみ
             if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
             {
-                ipList += ip.ToString() + "<br>";
+                status.ip += ip.ToString() + "<br>";
             }
         }
-        ipList = ipList.Trim();
+        status.ip = status.ip.Trim();
 
 
         //初期化
@@ -111,19 +112,14 @@ public class ManagerScript : MonoBehaviour
         //汎用ステータス応答
         if (commandJson == null)
         {
-            bool connected = false;
+            status.connected = false;
             if (lastPacketTime != communicationValidator.time)
             {
-                connected = true;
+                status.connected = true;
                 lastPacketTime = communicationValidator.time;
             }
 
-            return JsonUtility.ToJson(new CMD_Status
-            {
-                ip = ipList,
-                deviceFound = deviceFound,
-                connected = connected
-            });
+            return JsonUtility.ToJson(status);
         }
 
         //Jsonをコマンド解析
@@ -135,6 +131,14 @@ public class ManagerScript : MonoBehaviour
         {
             //Jsonを詳細解析
             var d = JsonUtility.FromJson<CMD_Load>(commandJson);
+            synchronizationContext.Post(_ => {
+                FileBrowser.HideDialog();
+                if (modalObject != null)
+                {
+                    Destroy(modalObject);
+                    modalObject = null;
+                }
+            }, null);
 
             if (File.Exists(d.path))
             {
@@ -155,6 +159,9 @@ public class ManagerScript : MonoBehaviour
         {
             //Jsonを詳細解析
             var d = JsonUtility.FromJson<CMD_Save>(commandJson);
+            synchronizationContext.Post(_ => {
+                FileBrowser.HideDialog();
+            }, null);
 
             File.WriteAllText(d.path, JsonUtility.ToJson(saveData), new UTF8Encoding(false));
             Debug.Log("Save: " + d.path);
@@ -164,8 +171,37 @@ public class ManagerScript : MonoBehaviour
                 message = "OK",
             });
         }
+        else if (c.command == "Browse")
+        {
+            synchronizationContext.Post(_ => {
+                FileBrowser.SetFilters(true, new FileBrowser.Filter("json",".json"));
+                FileBrowser.SetDefaultFilter(".json");
+                StartCoroutine(ShowLoadDialogCoroutine());
+            }, null);
+            return JsonUtility.ToJson(new CMD_Response
+            {
+                success = true,
+                message = "OK",
+            });
+        }
+        else if (c.command == "BrowseVRM")
+        {
+            synchronizationContext.Post(_ => {
+                FileBrowser.SetFilters(true, new FileBrowser.Filter("VRM",".vrm"));
+                FileBrowser.SetDefaultFilter(".vrm");
+                StartCoroutine(ShowLoadDialogCoroutineForVRM());
+            }, null);
+            return JsonUtility.ToJson(new CMD_Response
+            {
+                success = true,
+                message = "OK",
+            });
+        }
         else if (c.command == "Init")
         {
+            synchronizationContext.Post(_ => {
+                FileBrowser.HideDialog();
+            }, null);
             return JsonUtility.ToJson(new CMD_InitParam
             {
                 loadvrmPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "default.vrm"),
@@ -174,11 +210,11 @@ public class ManagerScript : MonoBehaviour
         }
         else if (c.command == "AutoConnect")
         {
-            deviceFound = false;
+            status.deviceFound = false;
             //メインスレッドに渡す
             synchronizationContext.Post(_ => {
                 requester.StartDiscover(() => {
-                    deviceFound = true;
+                    status.deviceFound = true;
                 });
             }, null);
             return JsonUtility.ToJson(new CMD_Response
@@ -222,6 +258,8 @@ public class ManagerScript : MonoBehaviour
                 //メインスレッドに渡す
                 synchronizationContext.Post(_ =>
                 {
+                    FileBrowser.HideDialog();
+
                     if (modalObject != null)
                     {
                         Destroy(modalObject);
@@ -262,6 +300,8 @@ public class ManagerScript : MonoBehaviour
                 //メインスレッドに渡す
                 synchronizationContext.Post(_ =>
                 {
+                    FileBrowser.HideDialog();
+
                     byte[] bytes = File.ReadAllBytes(d.path);
 
                     var context = new VRMImporterContext();
@@ -403,6 +443,26 @@ public class ManagerScript : MonoBehaviour
             success = false,
             message = "Command not found",
         });
+    }
+
+    IEnumerator ShowLoadDialogCoroutine()
+    {
+        yield return FileBrowser.WaitForSaveDialog(false, true, null, "Setting File", "Select");
+        Debug.Log(FileBrowser.Success);
+        if (FileBrowser.Success)
+        {
+            status.lastBrowse = FileBrowser.Result[0];
+        }
+    }
+
+    IEnumerator ShowLoadDialogCoroutineForVRM()
+    {
+        yield return FileBrowser.WaitForLoadDialog(false, true, null, "VRM File", "Select");
+        Debug.Log(FileBrowser.Success);
+        if (FileBrowser.Success)
+        {
+            status.lastBrowseVRM = FileBrowser.Result[0];
+        }
     }
 }
 
