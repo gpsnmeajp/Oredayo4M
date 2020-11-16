@@ -16,6 +16,8 @@ Linux: Oredayo4M.x86_64を起動してください。ファイアーウォール
 # [ダウンロード](https://github.com/gpsnmeajp/Oredayo4M/releases)
 
 # スクリーンショット
+※モデルは付属しません。改変元モデルはこちら: [オオヌエプラント【オリジナル3Dモデル】Phelga -フェルガ- v1.3](https://kazehokora.booth.pm/items/1678402)
+
 <img src="https://github.com/gpsnmeajp/Oredayo4M/blob/main/README-image/Mac.png?raw=true"></img>
 <img src="https://github.com/gpsnmeajp/Oredayo4M/blob/main/README-image/Win.png?raw=true"></img>
 <img src="https://github.com/gpsnmeajp/Oredayo4M/blob/main/README-image/Linux.png?raw=true"></img>
