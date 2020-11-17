@@ -13,7 +13,8 @@ Linux: Oredayo4M.x86_64を起動してください。ファイアーウォール
   
 特に指定がない場合、ユーザーフォルダ(ホームディレクトリ)直下に保存したdefault.vrmが読み込まれます。  
 
-# [ダウンロード](https://github.com/gpsnmeajp/Oredayo4M/releases)
+# [boothからダウンロード(安定版)](https://sabowl.booth.pm/items/2533088)
+# [githubからダウンロード(最新版)](https://github.com/gpsnmeajp/Oredayo4M/releases)
 
 # スクリーンショット
 ※モデルは付属しません。改変元モデルはこちら: [オオヌエプラント【オリジナル3Dモデル】Phelga -フェルガ- v1.3](https://kazehokora.booth.pm/items/1678402)
