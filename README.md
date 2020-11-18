@@ -12,6 +12,7 @@ Linux: Oredayo4M.x86_64を起動してください。ファイアーウォール
 あとはフィーリングで操作してください。  
   
 特に指定がない場合、ユーザーフォルダ(ホームディレクトリ)直下に保存したdefault.vrmが読み込まれます。  
+アバターの転送には[SEDSS_Client](https://github.com/gpsnmeajp/SEDSS_Client/)を使用すると便利です。  
 
 # [boothからダウンロード(安定版)](https://sabowl.booth.pm/items/2533088)
 # [githubからダウンロード(最新版)](https://github.com/gpsnmeajp/Oredayo4M/releases)
