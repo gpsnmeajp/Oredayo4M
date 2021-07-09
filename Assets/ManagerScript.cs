@@ -456,6 +456,41 @@ public class ManagerScript : MonoBehaviour
                 message = "OK",
             });
         }
+        else if (c.command == "ConnectDVRC")
+        {
+            //Jsonを詳細解析
+            //var d = JsonUtility.FromJson<CMD_Camera>(commandJson);
+
+            //メインスレッドに渡す
+            synchronizationContext.Post(_ => {
+                //TODO
+                Debug.LogError("TODO");
+            }, null);
+
+            return JsonUtility.ToJson(new CMD_Response
+            {
+                success = false,
+                message = "ERR: TODO ConnectDVRC",
+            });
+        }
+        else if (c.command == "LoadDVRC")
+        {
+            //Jsonを詳細解析
+            //var d = JsonUtility.FromJson<CMD_Camera>(commandJson);
+
+            //メインスレッドに渡す
+            synchronizationContext.Post(_ => {
+                //TODO
+                Debug.LogError("TODO");
+            }, null);
+
+            return JsonUtility.ToJson(new CMD_Response
+            {
+                success = false,
+                message = "ERR: TODO LoadDVRC",
+            });
+        }
+
 
         return JsonUtility.ToJson(new CMD_Response
         {

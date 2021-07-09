@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<header>
-			<h2>Oredayo4M v0.03</h2>
+			<h2>Oredayo4M v0.04</h2>
 			<p><a href="https://github.com/gpsnmeajp/Oredayo4M">Github</a></p>
 		</header>
 		<main>
@@ -30,11 +30,18 @@
 				<br>
 				<button onclick="AutoConnect();">AutoConnect</button>
 			</aside>
+
 			<aside>
 				<h3>Load VRM</h3>
 				<label>Path: <input id="LoadVRM_Path" value="" style="display: inline; margin-bottom: 0;" /><button onclick="BrowseVRM();" style="display: inline; margin-bottom: 0; margin-left: 0.1em; padding: 0;">...</button></label>
 				<button onclick="LoadVRMLicence();">Licence</button>
 				<button onclick="LoadVRM();">Agree</button>
+			</aside>
+
+			<aside>
+				<h3>DMM VR Connect</h3>
+				<button onclick="ConnectDVRC();">Connect</button>
+				<button onclick="LoadDVRC();">Load</button>
 			</aside>
 
 			<aside>

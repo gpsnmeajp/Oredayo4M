@@ -82,6 +82,9 @@ window.onload = ()=>{
 			SendAll();
 			LoadVRM();
 		}
+		if(response.command == "OpenURI"){
+			//TODO
+		}
 	};
 	
 	//定期データ取得
@@ -222,6 +225,19 @@ function SetFilter()
 	worker.postMessage(JSON.stringify(body));
 }
 
+function ConnectDVRC()
+{
+	//TODO
+	let body = {"command": "ConnectDVRC"}
+	worker.postMessage(JSON.stringify(body));
+}
+
+function LoadDVRC()
+{
+	//TODO
+	let body = {"command": "LoadDVRC"}
+	worker.postMessage(JSON.stringify(body));
+}
 
 function Init()
 {
