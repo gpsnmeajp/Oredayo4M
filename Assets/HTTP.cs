@@ -71,7 +71,7 @@ class HTTP : IDisposable
                 string res = "";
 
                 response.StatusCode = 200;
-                response.ContentType = "text/html";
+                response.ContentType = "text/html; charset=UTF-8";
 
                 try
                 {
@@ -80,11 +80,11 @@ class HTTP : IDisposable
                     {
                         case "/":
                             res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "index.htm"), new UTF8Encoding(false));
-                            response.ContentType = "text/html";
+                            response.ContentType = "text/html; charset=UTF-8";
                             break;
                         case "/info.dat":
                             res = responseBody;
-                            response.ContentType = "application/json";
+                            response.ContentType = "application/json; charset=UTF-8";
                             break;
                         case "/command.dat":
                             res = "200 OK";
@@ -110,35 +110,35 @@ class HTTP : IDisposable
                             {
                                 Debug.Log("< " + res);
                             }
-                            response.ContentType = "application/json";
+                            response.ContentType = "application/json; charset=UTF-8";
                             break;
                         case "/script.js":
                             res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "script.js"), new UTF8Encoding(false));
-                            response.ContentType = "text/javascript";
+                            response.ContentType = "text/javascript; charset=UTF-8";
                             break;
                         case "/worker.js":
                             res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "worker.js"), new UTF8Encoding(false));
-                            response.ContentType = "text/javascript";
+                            response.ContentType = "text/javascript; charset=UTF-8";
                             break;
                         case "/style.css":
                             res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "style.css"), new UTF8Encoding(false));
-                            response.ContentType = "text/css";
+                            response.ContentType = "text/css; charset=UTF-8";
                             break;
                         case "/mvp.css":
                             res = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "mvp.css"), new UTF8Encoding(false));
-                            response.ContentType = "text/css";
+                            response.ContentType = "text/css; charset=UTF-8";
                             break;
                         default:
                             res = "404 Not found";
                             response.StatusCode = 404;
-                            response.ContentType = "text/html";
+                            response.ContentType = "text/html; charset=UTF-8";
                             break;
                     }
                 }
                 catch (Exception e)
                 {
                     response.StatusCode = 500;
-                    res = JsonUtility.ToJson(new CMD_Response
+                    res = JsonUtility.ToJson(new RES_Response
                     {
                         success = false,
                         message = "Internal Server Error\n" + e.Message + "\n" + e.StackTrace,

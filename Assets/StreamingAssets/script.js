@@ -4,6 +4,7 @@ let worker;
 
 let lastBrowse = "";
 let lastBrowseVRM = "";
+let lastDVRC_Avatars = "";
 
 window.onload = ()=>{
 	if (!window.Worker) {
@@ -31,6 +32,29 @@ window.onload = ()=>{
 			if(lastBrowse != response.lastBrowse){
 				lastBrowse = response.lastBrowse;
 				document.getElementById ("Settings_Path").value = response.lastBrowse;
+			}
+
+			if(response.DVRC_AuthState == "AUTHENTICATION_REQUIRED"){
+				document.getElementById ("MessageDVRC").innerHTML = "<a href='"+response.DVRC_AuthUri+"' target='_blank' rel='noopener'>Click here to login<br>(Open DMM VR Connect)!</a><br>KEY: "+response.DVRC_AuthKey;
+			}else if(response.DVRC_AuthState == "AUTHENTICATION_OK"){
+				document.getElementById ("MessageDVRC").innerHTML = "LOGIN OK";
+			}else if(response.DVRC_AuthState == "AUTHENTICATION_FAILED"){
+				document.getElementById ("MessageDVRC").innerHTML = "LOGIN FAILED";
+			}else{
+				document.getElementById ("MessageDVRC").innerHTML = "";
+			}
+
+			if(response.DVRC_Avatars != "" && JSON.stringify(response.DVRC_Avatars) != lastDVRC_Avatars){
+				lastDVRC_Avatars = JSON.stringify(response.DVRC_Avatars);
+				
+				let AvatarsDVRC = document.getElementById ("AvatarsDVRC");
+				AvatarsDVRC.innerHTML = "";
+				for(let i=0;i<response.DVRC_Avatars.length;i++){
+					let option = document.createElement("option");
+					option.setAttribute("value",i);
+					option.innerHTML = response.DVRC_Avatars[i];
+					AvatarsDVRC.appendChild(option);
+				}	
 			}
 		}
 		if(response.command == "Internal"){
@@ -81,9 +105,6 @@ window.onload = ()=>{
 			document.getElementById ("Filter_BlendShape").value = Math.round(response.filter.blendShape*100000.0)/100000.0;
 			SendAll();
 			LoadVRM();
-		}
-		if(response.command == "OpenURI"){
-			//TODO
 		}
 	};
 	
@@ -225,17 +246,25 @@ function SetFilter()
 	worker.postMessage(JSON.stringify(body));
 }
 
-function ConnectDVRC()
+function LoginDVRC()
 {
 	//TODO
-	let body = {"command": "ConnectDVRC"}
+	let body = {"command": "LoginDVRC"}
+	worker.postMessage(JSON.stringify(body));
+}
+
+function GetAvatarListDVRC()
+{
+	//TODO
+	let body = {"command": "GetAvatarListDVRC"}
 	worker.postMessage(JSON.stringify(body));
 }
 
 function LoadDVRC()
 {
 	//TODO
-	let body = {"command": "LoadDVRC"}
+	let AvatarsDVRC = document.getElementById ("AvatarsDVRC");
+	let body = {"command": "LoadDVRC", "index": AvatarsDVRC.value}
 	worker.postMessage(JSON.stringify(body));
 }
 

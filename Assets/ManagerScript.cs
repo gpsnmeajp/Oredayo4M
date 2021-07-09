@@ -55,14 +55,14 @@ public class ManagerScript : MonoBehaviour
     public EasyDeviceDiscoveryProtocolClient.Requester requester;
     public EVMC4U.CommunicationValidator communicationValidator;
 
-    CMD_SaveData saveData = new CMD_SaveData(); //コマンドであり、セーブデータ構造体である
+    RES_SaveData saveData = new RES_SaveData(); //コマンドであり、セーブデータ構造体である
 
     SynchronizationContext synchronizationContext;
     HTTP http;
 
     float lastPacketTime = 0.0f;
 
-    CMD_Status status = new CMD_Status();
+    RES_Status status = new RES_Status();
 
     void Start()
     {
@@ -144,11 +144,11 @@ public class ManagerScript : MonoBehaviour
             {
                 string data = File.ReadAllText(d.path);
                 Debug.Log("Load: " + d.path);
-                saveData = JsonUtility.FromJson<CMD_SaveData>(data);
+                saveData = JsonUtility.FromJson<RES_SaveData>(data);
                 return JsonUtility.ToJson(saveData);
             }
             else {
-                return JsonUtility.ToJson(new CMD_Response
+                return JsonUtility.ToJson(new RES_Response
                 {
                     success = false,
                     message = "File not found",
@@ -165,7 +165,7 @@ public class ManagerScript : MonoBehaviour
 
             File.WriteAllText(d.path, JsonUtility.ToJson(saveData), new UTF8Encoding(false));
             Debug.Log("Save: " + d.path);
-            return JsonUtility.ToJson(new CMD_Response
+            return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
                 message = "OK",
@@ -178,7 +178,7 @@ public class ManagerScript : MonoBehaviour
                 FileBrowser.SetDefaultFilter(".json");
                 StartCoroutine(ShowLoadDialogCoroutine());
             }, null);
-            return JsonUtility.ToJson(new CMD_Response
+            return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
                 message = "OK",
@@ -191,7 +191,7 @@ public class ManagerScript : MonoBehaviour
                 FileBrowser.SetDefaultFilter(".vrm");
                 StartCoroutine(ShowLoadDialogCoroutineForVRM());
             }, null);
-            return JsonUtility.ToJson(new CMD_Response
+            return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
                 message = "OK",
@@ -217,7 +217,7 @@ public class ManagerScript : MonoBehaviour
                     status.deviceFound = true;
                 });
             }, null);
-            return JsonUtility.ToJson(new CMD_Response
+            return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
                 message = "OK",
@@ -235,7 +235,7 @@ public class ManagerScript : MonoBehaviour
                 BackgroundSphere.material.color = new Color(d.r, d.g, d.b);
             }, null);
 
-            return JsonUtility.ToJson(new CMD_Response
+            return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
                 message = "OK",
@@ -269,7 +269,7 @@ public class ManagerScript : MonoBehaviour
                     receiver.LoadVRM(d.path);
                 }, null);
 
-                return JsonUtility.ToJson(new CMD_Response
+                return JsonUtility.ToJson(new RES_Response
                 {
                     success = true,
                     message = "OK",
@@ -277,7 +277,7 @@ public class ManagerScript : MonoBehaviour
             }
             else
             {
-                return JsonUtility.ToJson(new CMD_Response
+                return JsonUtility.ToJson(new RES_Response
                 {
                     success = false,
                     message = "File not found",
@@ -322,14 +322,14 @@ public class ManagerScript : MonoBehaviour
                     modalUI.setMeta(meta);
                 }, null);
 
-                return JsonUtility.ToJson(new CMD_Response
+                return JsonUtility.ToJson(new RES_Response
                 {
                     success = true,
                     message = "OK",
                 });
             }
             else {
-                return JsonUtility.ToJson(new CMD_Response
+                return JsonUtility.ToJson(new RES_Response
                 {
                     success = false,
                     message = "File not found",
@@ -352,7 +352,7 @@ public class ManagerScript : MonoBehaviour
                 cameraBody.fieldOfView = d.fov;
             }, null);
 
-            return JsonUtility.ToJson(new CMD_Response
+            return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
                 message = "OK",
@@ -431,7 +431,7 @@ public class ManagerScript : MonoBehaviour
 
             }, null);
 
-            return JsonUtility.ToJson(new CMD_Response
+            return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
                 message = "OK",
@@ -450,49 +450,68 @@ public class ManagerScript : MonoBehaviour
                 receiver.BlendShapeFilter = d.blendShape;
             }, null);
 
-            return JsonUtility.ToJson(new CMD_Response
+            return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
                 message = "OK",
             });
         }
-        else if (c.command == "ConnectDVRC")
+        else if (c.command == "LoginDVRC")
         {
-            //Jsonを詳細解析
-            //var d = JsonUtility.FromJson<CMD_Camera>(commandJson);
-
             //メインスレッドに渡す
             synchronizationContext.Post(_ => {
                 //TODO
                 Debug.LogError("TODO");
             }, null);
 
-            return JsonUtility.ToJson(new CMD_Response
+            status.DVRC_AuthUri = "http://example.com/";
+            status.DVRC_AuthKey = "XXXX-XXXX";
+            status.DVRC_AuthState = "AUTHENTICATION_REQUIRED";
+
+            return JsonUtility.ToJson(new RES_Response
             {
-                success = false,
-                message = "ERR: TODO ConnectDVRC",
+                success = true,
+                message = "OK",
+            });
+        }
+        else if (c.command == "GetAvatarListDVRC")
+        {
+            //メインスレッドに渡す
+            synchronizationContext.Post(_ => {
+                //TODO
+                Debug.LogError("TODO");
+            }, null);
+            
+            status.DVRC_Avatars = new string[4] { "A", "B", "C", new System.Random().NextDouble().ToString() }; //テスト用
+            status.DVRC_AuthState = "AUTHENTICATION_OK"; //テスト用
+
+            return JsonUtility.ToJson(new RES_Response
+            {
+                success = true,
+                message = "OK",
             });
         }
         else if (c.command == "LoadDVRC")
         {
             //Jsonを詳細解析
-            //var d = JsonUtility.FromJson<CMD_Camera>(commandJson);
-
+            var d = JsonUtility.FromJson<CMD_LoadDVRC>(commandJson);
             //メインスレッドに渡す
             synchronizationContext.Post(_ => {
                 //TODO
                 Debug.LogError("TODO");
+                Debug.Log(d.index);
             }, null);
 
-            return JsonUtility.ToJson(new CMD_Response
+            status.DVRC_AuthState = "AUTHENTICATION_FAILED"; //テスト用
+
+            return JsonUtility.ToJson(new RES_Response
             {
-                success = false,
-                message = "ERR: TODO LoadDVRC",
+                success = true,
+                message = "OK",
             });
         }
 
-
-        return JsonUtility.ToJson(new CMD_Response
+        return JsonUtility.ToJson(new RES_Response
         {
             success = false,
             message = "Command not found",

@@ -5,18 +5,22 @@ using System.Collections.Generic;
 
 //ステータス情報
 [Serializable]
-public class CMD_Status
+public class RES_Status
 {
     public string command = "Status";
-    public string ip;
-    public bool deviceFound;
-    public bool connected;
+    public string ip = null;
+    public bool deviceFound = false;
+    public bool connected = false;
     public string lastBrowse = "";
     public string lastBrowseVRM = "";
+    public string DVRC_AuthState = null;
+    public string DVRC_AuthUri = null;
+    public string DVRC_AuthKey = null;
+    public string[] DVRC_Avatars = null;
 }
 //レスポンス
 [Serializable]
-public class CMD_Response
+public class RES_Response
 {
     public string command = "Response";
     public bool success;
@@ -122,7 +126,14 @@ public class CMD_Filter
 }
 
 [Serializable]
-public class CMD_SaveData
+public class CMD_LoadDVRC
+{
+    public string command;
+    public int index;
+}
+
+[Serializable]
+public class RES_SaveData
 {
     public string command = "SaveData";
     public CMD_LoadVRM loadvrm;
@@ -131,3 +142,4 @@ public class CMD_SaveData
     public CMD_PPS pps;
     public CMD_Filter filter;
 }
+

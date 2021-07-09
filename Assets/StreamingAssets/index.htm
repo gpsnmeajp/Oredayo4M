@@ -40,8 +40,11 @@
 
 			<aside>
 				<h3>DMM VR Connect</h3>
-				<button onclick="ConnectDVRC();">Connect</button>
-				<button onclick="LoadDVRC();">Load</button>
+				<button id="LoginDVRC" onclick="LoginDVRC();">Login</button>
+				<div style="color: red;" id="MessageDVRC"></div>
+				<button onclick="GetAvatarListDVRC();">Get Avatar List</button>
+				<label>Avatar: <select id="AvatarsDVRC" style="display: inline; margin-bottom: 0;"></select></label>
+				<button onclick="LoadDVRC();">Load Avatar</button>
 			</aside>
 
 			<aside>
