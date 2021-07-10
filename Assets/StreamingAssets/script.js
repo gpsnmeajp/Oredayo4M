@@ -40,6 +40,8 @@ window.onload = ()=>{
 				document.getElementById ("MessageDVRC").innerHTML = "LOGIN OK";
 			}else if(response.DVRC_AuthState == "AUTHENTICATION_FAILED"){
 				document.getElementById ("MessageDVRC").innerHTML = "LOGIN FAILED";
+			}else if(response.DVRC_AuthState == "AUTHENTICATION_LOGOUT"){
+				document.getElementById ("MessageDVRC").innerHTML = "LOGOUT";
 			}else{
 				document.getElementById ("MessageDVRC").innerHTML = "";
 			}
@@ -250,6 +252,13 @@ function LoginDVRC()
 {
 	//TODO
 	let body = {"command": "LoginDVRC"}
+	worker.postMessage(JSON.stringify(body));
+}
+
+function LogoutDVRC()
+{
+	//TODO
+	let body = {"command": "LogoutDVRC"}
 	worker.postMessage(JSON.stringify(body));
 }
 

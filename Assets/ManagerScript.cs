@@ -28,6 +28,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,7 @@ using SimpleFileBrowser;
 using DVRSDK.Auth;
 using DVRSDK.Utilities;
 using DVRSDK.Serializer;
+using DVRSDK.Avatar;
 
 public class ManagerScript : MonoBehaviour
 {
@@ -96,6 +98,19 @@ public class ManagerScript : MonoBehaviour
         saveData.loadvrm = new CMD_LoadVRM();
         saveData.camera = new CMD_Camera();
         saveData.bgcolor = new CMD_BG_Color();
+
+        //自動ログイン
+        var config = new DVRAuthConfiguration(TokenManager.DVRSDK_ClientId, new UnitySettingStore(), new UniWebRequest(), new NewtonsoftJsonSerializer());
+        Authentication.Instance.Init(config);
+        Task<bool> autologin = Authentication.Instance.TryAutoLogin((ok)=> {
+            if (ok)
+            {
+                status.DVRC_AuthState = "AUTHENTICATION_OK";
+            }
+            else {
+                status.DVRC_AuthState = "";
+            }
+        });
     }
 
     void Update()
@@ -464,8 +479,6 @@ public class ManagerScript : MonoBehaviour
         {
             //メインスレッドに渡す
             synchronizationContext.Post(_ => {
-                var config = new DVRAuthConfiguration(TokenManager.DVRSDK_ClientId, new UnitySettingStore(), new UniWebRequest(), new NewtonsoftJsonSerializer());
-                Authentication.Instance.Init(config);
                 Authentication.Instance.Authorize(
                     openBrowser: url =>
                     {
@@ -497,17 +510,34 @@ public class ManagerScript : MonoBehaviour
                 message = "OK",
             });
         }
-        else if (c.command == "GetAvatarListDVRC")
+        else if (c.command == "LogoutDVRC")
         {
             //メインスレッドに渡す
             synchronizationContext.Post(_ => {
-                //TODO
-                Debug.LogError("TODO");
+                var config = new DVRAuthConfiguration(TokenManager.DVRSDK_ClientId, new UnitySettingStore(), new UniWebRequest(), new NewtonsoftJsonSerializer());
+                Authentication.Instance.Init(config);
+                Authentication.Instance.DoLogout();
+                status.DVRC_AuthState = "AUTHENTICATION_LOGOUT";
+            }, null);
+
+            return JsonUtility.ToJson(new RES_Response
+            {
+                success = true,
+                message = "OK",
+            });
+        }
+        else if (c.command == "GetAvatarListDVRC")
+        {
+            //メインスレッドに渡す
+            synchronizationContext.Post(async _ => {
+                var avatars = await Authentication.Instance.Okami.GetAvatarsAsync();
+                status.DVRC_Avatars = new string[avatars.Count];
+                for (int i = 0; i < avatars.Count; i++) {
+                    status.DVRC_Avatars[i] = avatars[i].name;
+                }
+
             }, null);
             
-            status.DVRC_Avatars = new string[4] { "A", "B", "C", new System.Random().NextDouble().ToString() }; //テスト用
-            status.DVRC_AuthState = "AUTHENTICATION_OK"; //テスト用
-
             return JsonUtility.ToJson(new RES_Response
             {
                 success = true,
@@ -519,13 +549,29 @@ public class ManagerScript : MonoBehaviour
             //Jsonを詳細解析
             var d = JsonUtility.FromJson<CMD_LoadDVRC>(commandJson);
             //メインスレッドに渡す
-            synchronizationContext.Post(_ => {
-                //TODO
-                Debug.LogError("TODO");
-                Debug.Log(d.index);
-            }, null);
+            synchronizationContext.Post(async _ => {
+                var avatars = await Authentication.Instance.Okami.GetAvatarsAsync();
+                var currentAvatar = avatars[d.index];
 
-            status.DVRC_AuthState = "AUTHENTICATION_FAILED"; //テスト用
+                var vrmLoader = new DVRSDK.Avatar.VRMLoader();
+
+                receiver.DestroyModel();
+                receiver.Model = await Authentication.Instance.Okami.LoadAvatarVRMAsync(currentAvatar, vrmLoader.LoadVRMModelFromConnect) as GameObject;
+
+                //ExternalReceiverの下にぶら下げる
+                receiver.LoadedModelParent = new GameObject();
+                receiver.LoadedModelParent.transform.SetParent(transform, false);
+                receiver.LoadedModelParent.name = "LoadedModelParent";
+                //その下にモデルをぶら下げる
+                receiver.Model.transform.SetParent(receiver.LoadedModelParent.transform, false);
+
+                vrmLoader.ShowMeshes();
+                vrmLoader.AddAutoBlinkComponent();
+
+                //カメラなどの移動補助のため、頭の位置を格納する
+                Animator animator = receiver.Model.GetComponent<Animator>();
+                receiver.HeadPosition = animator.GetBoneTransform(HumanBodyBones.Head).position;
+            }, null);
 
             return JsonUtility.ToJson(new RES_Response
             {
