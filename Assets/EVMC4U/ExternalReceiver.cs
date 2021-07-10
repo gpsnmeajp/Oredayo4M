@@ -144,7 +144,7 @@ namespace EVMC4U
         const int PACKET_LIMIT_MAX = 30;
 
         //読込中は読み込まない
-        bool isLoading = false;
+        public bool isLoading = false;
 
         //メッセージ処理一時変数struct(負荷対策)
         Vector3 pos;

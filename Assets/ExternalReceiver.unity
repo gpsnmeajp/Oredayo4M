@@ -295,6 +295,55 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6911890659015468131, guid: a15295da729586142b5d44bb4a14598d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a15295da729586142b5d44bb4a14598d, type: 3}
+--- !u!1 &499727679
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 499727681}
+  - component: {fileID: 499727680}
+  m_Layer: 0
+  m_Name: RemoteReceiver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &499727680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499727679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ab550a7c4e41c4ba67e07f046ea7f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 1238798825}
+  user_id: 
+  avatar_id: 
+  StatusMessage: 
+  NextReceivers:
+  - {fileID: 0}
+--- !u!4 &499727681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499727679}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &515840947
 GameObject:
   m_ObjectHideFlags: 0
@@ -789,6 +838,10 @@ PrefabInstance:
       propertyPath: BlendShapeFilter
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4740143680597435056, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
+      propertyPath: NextReceivers.Array.data[5]
+      value: 
+      objectReference: {fileID: 499727679}
     - target: {fileID: 4740143680597435057, guid: 86b1e8192cb57cd47890882526664df1, type: 3}
       propertyPath: m_Name
       value: ExternalReceiver

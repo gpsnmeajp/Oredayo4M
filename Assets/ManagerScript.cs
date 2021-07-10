@@ -68,7 +68,7 @@ public class ManagerScript : MonoBehaviour
 
     float lastPacketTime = 0.0f;
 
-    RES_Status status = new RES_Status();
+    public RES_Status status = new RES_Status();
 
     void Start()
     {
@@ -116,7 +116,6 @@ public class ManagerScript : MonoBehaviour
 
     void Update()
     {
-        
     }
 
     private void OnApplicationQuit()
@@ -550,24 +549,7 @@ public class ManagerScript : MonoBehaviour
                 var avatars = await Authentication.Instance.Okami.GetAvatarsAsync();
                 var currentAvatar = avatars[d.index];
 
-                var vrmLoader = new DVRSDK.Avatar.VRMLoader();
-
-                receiver.DestroyModel();
-                receiver.Model = await Authentication.Instance.Okami.LoadAvatarVRMAsync(currentAvatar, vrmLoader.LoadVRMModelFromConnect) as GameObject;
-
-                //ExternalReceiverの下にぶら下げる
-                receiver.LoadedModelParent = new GameObject();
-                receiver.LoadedModelParent.transform.SetParent(transform, false);
-                receiver.LoadedModelParent.name = "LoadedModelParent";
-                //その下にモデルをぶら下げる
-                receiver.Model.transform.SetParent(receiver.LoadedModelParent.transform, false);
-
-                vrmLoader.ShowMeshes();
-                vrmLoader.AddAutoBlinkComponent();
-
-                //カメラなどの移動補助のため、頭の位置を格納する
-                Animator animator = receiver.Model.GetComponent<Animator>();
-                receiver.HeadPosition = animator.GetBoneTransform(HumanBodyBones.Head).position;
+                await LoadAvatarFromDVRSDK(currentAvatar);
             }, null);
 
             return JsonUtility.ToJson(new RES_Response
@@ -611,6 +593,26 @@ public class ManagerScript : MonoBehaviour
         {
             status.DVRC_Avatars[i] = avatars[i].name;
         }
+    }
+    public async Task LoadAvatarFromDVRSDK(DVRSDK.Auth.Okami.Models.AvatarModel avatar) {
+        var vrmLoader = new DVRSDK.Avatar.VRMLoader();
+
+        receiver.DestroyModel();
+        receiver.Model = await Authentication.Instance.Okami.LoadAvatarVRMAsync(avatar, vrmLoader.LoadVRMModelFromConnect) as GameObject;
+
+        //ExternalReceiverの下にぶら下げる
+        receiver.LoadedModelParent = new GameObject();
+        receiver.LoadedModelParent.transform.SetParent(transform, false);
+        receiver.LoadedModelParent.name = "LoadedModelParent";
+        //その下にモデルをぶら下げる
+        receiver.Model.transform.SetParent(receiver.LoadedModelParent.transform, false);
+
+        vrmLoader.ShowMeshes();
+        vrmLoader.AddAutoBlinkComponent();
+
+        //カメラなどの移動補助のため、頭の位置を格納する
+        Animator animator = receiver.Model.GetComponent<Animator>();
+        receiver.HeadPosition = animator.GetBoneTransform(HumanBodyBones.Head).position;
     }
 }
 
