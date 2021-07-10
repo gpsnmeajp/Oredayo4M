@@ -102,10 +102,11 @@ public class ManagerScript : MonoBehaviour
         //自動ログイン
         var config = new DVRAuthConfiguration(TokenManager.DVRSDK_ClientId, new UnitySettingStore(), new UniWebRequest(), new NewtonsoftJsonSerializer());
         Authentication.Instance.Init(config);
-        Task<bool> autologin = Authentication.Instance.TryAutoLogin((ok)=> {
+        Task<bool> autologin = Authentication.Instance.TryAutoLogin(async (ok)=> {
             if (ok)
             {
                 status.DVRC_AuthState = "AUTHENTICATION_OK";
+                await GetAvatarsList();
             }
             else {
                 status.DVRC_AuthState = "";
@@ -486,11 +487,12 @@ public class ManagerScript : MonoBehaviour
                         status.DVRC_AuthKey = url.UserCode;
                         status.DVRC_AuthState = "AUTHENTICATION_REQUIRED";
                     },
-                    onAuthSuccess: isSuccess =>
+                    onAuthSuccess: async isSuccess =>
                     {
                         if (isSuccess)
                         {
                             status.DVRC_AuthState = "AUTHENTICATION_OK";
+                            await GetAvatarsList();
                         }
                         else
                         {
@@ -530,12 +532,7 @@ public class ManagerScript : MonoBehaviour
         {
             //メインスレッドに渡す
             synchronizationContext.Post(async _ => {
-                var avatars = await Authentication.Instance.Okami.GetAvatarsAsync();
-                status.DVRC_Avatars = new string[avatars.Count];
-                for (int i = 0; i < avatars.Count; i++) {
-                    status.DVRC_Avatars[i] = avatars[i].name;
-                }
-
+                await GetAvatarsList();
             }, null);
             
             return JsonUtility.ToJson(new RES_Response
@@ -604,6 +601,15 @@ public class ManagerScript : MonoBehaviour
         if (FileBrowser.Success)
         {
             status.lastBrowseVRM = FileBrowser.Result[0];
+        }
+    }
+
+    async Task GetAvatarsList() {
+        var avatars = await Authentication.Instance.Okami.GetAvatarsAsync();
+        status.DVRC_Avatars = new string[avatars.Count];
+        for (int i = 0; i < avatars.Count; i++)
+        {
+            status.DVRC_Avatars[i] = avatars[i].name;
         }
     }
 }
