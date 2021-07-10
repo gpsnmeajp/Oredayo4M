@@ -37,6 +37,10 @@ using VRM;
 using VRMLoader;
 using SimpleFileBrowser;
 
+using DVRSDK.Auth;
+using DVRSDK.Utilities;
+using DVRSDK.Serializer;
+
 public class ManagerScript : MonoBehaviour
 {
     public ExternalReceiver receiver;
@@ -460,13 +464,32 @@ public class ManagerScript : MonoBehaviour
         {
             //メインスレッドに渡す
             synchronizationContext.Post(_ => {
-                //TODO
-                Debug.LogError("TODO");
+                var config = new DVRAuthConfiguration(TokenManager.DVRSDK_ClientId, new UnitySettingStore(), new UniWebRequest(), new NewtonsoftJsonSerializer());
+                Authentication.Instance.Init(config);
+                Authentication.Instance.Authorize(
+                    openBrowser: url =>
+                    {
+                        status.DVRC_AuthUri = url.VerificationUri;
+                        status.DVRC_AuthKey = url.UserCode;
+                        status.DVRC_AuthState = "AUTHENTICATION_REQUIRED";
+                    },
+                    onAuthSuccess: isSuccess =>
+                    {
+                        if (isSuccess)
+                        {
+                            status.DVRC_AuthState = "AUTHENTICATION_OK";
+                        }
+                        else
+                        {
+                            status.DVRC_AuthState = "AUTHENTICATION_FAILED";
+                        }
+                    },
+                    onAuthError: exception =>
+                    {
+                        status.DVRC_AuthState = "AUTHENTICATION_FAILED";
+                        Debug.LogError(exception);
+                    });
             }, null);
-
-            status.DVRC_AuthUri = "http://example.com/";
-            status.DVRC_AuthKey = "XXXX-XXXX";
-            status.DVRC_AuthState = "AUTHENTICATION_REQUIRED";
 
             return JsonUtility.ToJson(new RES_Response
             {
