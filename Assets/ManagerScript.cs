@@ -608,7 +608,7 @@ public class ManagerScript : MonoBehaviour
         receiver.Model.transform.SetParent(receiver.LoadedModelParent.transform, false);
 
         vrmLoader.ShowMeshes();
-        vrmLoader.AddAutoBlinkComponent();
+        //vrmLoader.AddAutoBlinkComponent();
 
         //カメラなどの移動補助のため、頭の位置を格納する
         Animator animator = receiver.Model.GetComponent<Animator>();
